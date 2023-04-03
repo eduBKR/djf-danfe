@@ -1,8 +1,7 @@
-const handlebars = require('handlebars')
-const NFe = require('djf-nfe')
-const TEMPLATE_DANFE = __dirname + '/template-danfe.hbs'
-const fs = require('fs')
-const path = require('path')
+const handlebars = require("handlebars");
+const NFe = require("djf-nfe");
+const TEMPLATE_DANFE = __dirname + "/template-danfe.hbs";
+const fs = require("fs");
 
 /**
  * Retorna <valor> especificado com máscara do CPF.
@@ -10,23 +9,23 @@ const path = require('path')
  * @param      {string}  valor
  * @return     {string}
  */
-function mascaraCPF (valor) {
-  var retorno
-  var grupo01 = valor.substring(0, 3)
-  retorno = grupo01
-  var grupo02 = valor.substring(3, 6)
-  if (grupo02 !== '') {
-    retorno += '.' + grupo02
+function mascaraCPF(valor) {
+  var retorno;
+  var grupo01 = valor.substring(0, 3);
+  retorno = grupo01;
+  var grupo02 = valor.substring(3, 6);
+  if (grupo02 !== "") {
+    retorno += "." + grupo02;
   }
-  var grupo03 = valor.substring(6, 9)
-  if (grupo03 !== '') {
-    retorno += '.' + grupo03
+  var grupo03 = valor.substring(6, 9);
+  if (grupo03 !== "") {
+    retorno += "." + grupo03;
   }
-  var grupo04 = valor.substring(9)
-  if (grupo04 !== '') {
-    retorno += '-' + grupo04
+  var grupo04 = valor.substring(9);
+  if (grupo04 !== "") {
+    retorno += "-" + grupo04;
   }
-  return retorno
+  return retorno;
 }
 
 /**
@@ -35,27 +34,27 @@ function mascaraCPF (valor) {
  * @param      {string}  valor
  * @return     {string}
  */
-function mascaraCNPJ (valor) {
-  var retorno
-  var grupo01 = valor.substring(0, 2)
-  retorno = grupo01
-  var grupo02 = valor.substring(2, 5)
-  if (grupo02 !== '') {
-    retorno += '.' + grupo02
+function mascaraCNPJ(valor) {
+  var retorno;
+  var grupo01 = valor.substring(0, 2);
+  retorno = grupo01;
+  var grupo02 = valor.substring(2, 5);
+  if (grupo02 !== "") {
+    retorno += "." + grupo02;
   }
-  var grupo03 = valor.substring(5, 8)
-  if (grupo03 !== '') {
-    retorno += '.' + grupo03
+  var grupo03 = valor.substring(5, 8);
+  if (grupo03 !== "") {
+    retorno += "." + grupo03;
   }
-  var grupo04 = valor.substring(8, 12)
-  if (grupo04 !== '') {
-    retorno += '/' + grupo04
+  var grupo04 = valor.substring(8, 12);
+  if (grupo04 !== "") {
+    retorno += "/" + grupo04;
   }
-  var grupo05 = valor.substring(12)
-  if (grupo05 !== '') {
-    retorno += '-' + grupo05
+  var grupo05 = valor.substring(12);
+  if (grupo05 !== "") {
+    retorno += "-" + grupo05;
   }
-  return retorno
+  return retorno;
 }
 
 /**
@@ -64,16 +63,16 @@ function mascaraCNPJ (valor) {
  * @param      {string}  numero
  * @return     {string}
  */
-function formataInscricaoNacional (numero) {
+function formataInscricaoNacional(numero) {
   if (numero) {
     if (numero.length === 11) {
-      return mascaraCPF(numero)
+      return mascaraCPF(numero);
     }
     if (numero.length === 14) {
-      return mascaraCNPJ(numero)
+      return mascaraCNPJ(numero);
     }
   }
-  return numero
+  return numero;
 }
 
 /**
@@ -83,28 +82,38 @@ function formataInscricaoNacional (numero) {
  * @param      {string}  dt
  * @return     {string}
  */
-function formataData (dt) {
-  dt = dt ? dt.toString() : ''
-  if (!dt) { return '' }
+function formataData(dt) {
+  dt = dt ? dt.toString() : "";
+  if (!dt) {
+    return "";
+  }
 
   if (dt && dt.length === 10) {
-    dt += 'T00:00:00+00:00'
+    dt += "T00:00:00+00:00";
   }
 
-  var [data, hora] = dt.split('T')
-  var [hora, utc] = hora.split(/[-+]/)
-  var [ano, mes, dia] = data.split('-')
-  var [hora, min, seg] = hora.split(':')
-  var [utchora, utcmin] = utc ? utc.split(':') : ['', '']
-  return dia.padStart(2, '0') + '/' + mes.toString().padStart(2, '0') + '/' + ano
+  var [data, hora] = dt.split("T");
+  var [hora, utc] = hora.split(/[-+]/);
+  var [ano, mes, dia] = data.split("-");
+  var [hora, min, seg] = hora.split(":");
+  var [utchora, utcmin] = utc ? utc.split(":") : ["", ""];
+  return (
+    dia.padStart(2, "0") + "/" + mes.toString().padStart(2, "0") + "/" + ano
+  );
 }
 
-function formataHora (dt) {
+function formataHora(dt) {
   if (dt) {
-    var data = new Date(dt)
-    return data.getHours().toString().padStart(2, '0') + ':' + (data.getMinutes().toString().padStart(2, '0')) + ':' + data.getSeconds().toString().padStart(2, '0')
+    var data = new Date(dt);
+    return (
+      data.getHours().toString().padStart(2, "0") +
+      ":" +
+      data.getMinutes().toString().padStart(2, "0") +
+      ":" +
+      data.getSeconds().toString().padStart(2, "0")
+    );
   }
-  return ''
+  return "";
 }
 
 /**
@@ -114,22 +123,34 @@ function formataHora (dt) {
  * @param      {number}  decimais
  * @return     {string}
  */
-function formataMoeda (numero, decimais) {
-  decimais = decimais || 4
-  var symbol = ''
-  var decimal = ','
-  var thousand = '.'
-  var negative = numero < 0 ? '-' : ''
-  var i = parseInt(numero = Math.abs(+numero || 0).toFixed(decimais), 10) + ''
-  var j = 0
+function formataMoeda(numero, decimais) {
+  decimais = decimais || 2;
+  var symbol = "";
+  var decimal = ",";
+  var thousand = ".";
+  var negative = numero < 0 ? "-" : "";
+  var i =
+    parseInt((numero = Math.abs(+numero || 0).toFixed(decimais)), 10) + "";
+  var j = 0;
 
-  decimais = !isNaN(decimais = Math.abs(decimais)) ? decimais : 2
-  symbol = symbol !== undefined ? symbol : '$'
-  thousand = thousand || ','
-  decimal = decimal || '.'
-  j = (j = i.length) > 3 ? j % 3 : 0
-  return symbol + negative + (j ? i.substr(0, j) + thousand : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thousand) + (decimais ? decimal + Math.abs(numero - i).toFixed(decimais).slice(2) : '')
-};
+  decimais = !isNaN((decimais = Math.abs(decimais))) ? decimais : 2;
+  symbol = symbol !== undefined ? symbol : "$";
+  thousand = thousand || ",";
+  decimal = decimal || ".";
+  j = (j = i.length) > 3 ? j % 3 : 0;
+  return (
+    symbol +
+    negative +
+    (j ? i.substr(0, j) + thousand : "") +
+    i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) +
+    (decimais
+      ? decimal +
+        Math.abs(numero - i)
+          .toFixed(decimais)
+          .slice(2)
+      : "")
+  );
+}
 
 /**
  * Retorna objeto representando os dados da <entidade> especificada.
@@ -137,7 +158,7 @@ function formataMoeda (numero, decimais) {
  * @param      {Object}  entidade  djf-nfe
  * @return     {Object}
  */
-function dadosEntidade (entidade) {
+function dadosEntidade(entidade) {
   if (entidade) {
     return {
       nome: entidade.nome(),
@@ -145,11 +166,13 @@ function dadosEntidade (entidade) {
       ie: entidade.inscricaoEstadual(),
       ie_st: entidade.inscricaoEstadualST(),
       inscricao_municipal: entidade.inscricaoMunicipal(),
-      inscricao_nacional: formataInscricaoNacional(entidade.inscricaoNacional()),
-      telefone: entidade.telefone()
-    }
+      inscricao_nacional: formataInscricaoNacional(
+        entidade.inscricaoNacional()
+      ),
+      telefone: entidade.telefone(),
+    };
   }
-  return {}
+  return {};
 }
 
 /**
@@ -158,7 +181,7 @@ function dadosEntidade (entidade) {
  * @param      {Object}  endereco   djf-nfe
  * @return     {Object}
  */
-function endereco (endereco) {
+function endereco(endereco) {
   if (endereco) {
     return {
       endereco: endereco.logradouro(),
@@ -167,31 +190,31 @@ function endereco (endereco) {
       bairro: endereco.bairro(),
       municipio: endereco.municipio(),
       cep: endereco.cep(),
-      uf: endereco.uf()
-    }
+      uf: endereco.uf(),
+    };
   }
-  return {}
+  return {};
 }
 
 /**
- * Retorna a <cahve> da NFE formata.
+ * Retorna a <chave> da NFE formata.
  * Formatação: grupos de 4 números separados por espaço.
  * @param      {string}  chave
  * @return     {string}
  */
-function formataChave (chave) {
-  var out = ''
+function formataChave(chave) {
+  var out = "";
   if (chave && chave.length === 44) {
-    for (var i = 0; i < chave.split('').length; i++) {
+    for (var i = 0; i < chave.split("").length; i++) {
       if (i % 4 === 0) {
-        out += ' ' + chave.charAt(i)
+        out += " " + chave.charAt(i);
       } else {
-        out += chave.charAt(i)
+        out += chave.charAt(i);
       }
     }
-    return out
+    return out;
   }
-  return chave
+  return chave;
 }
 
 /**
@@ -200,16 +223,16 @@ function formataChave (chave) {
  * @param      {<object>}  nfe     djf-nfe
  * @return     {array}
  */
-function itens (nfe) {
-  var itens = []
-  var nrItens = nfe.nrItens()
+function itens(nfe) {
+  var itens = [];
+  var nrItens = nfe.nrItens();
   for (var i = 1; i <= nrItens; i++) {
-    var row = nfe.item(i)
+    var row = nfe.item(i);
     var item = {
       codigo: row.codigo(),
       descricao: row.descricao(),
       ncm: row.ncm(),
-      cst: row.origem() + '' + row.cst(),
+      cst: row.origem() + "" + row.cst(),
       cfop: row.cfop(),
       unidade: row.unidadeComercial(),
       quantidade: formataMoeda(row.quantidadeComercial()),
@@ -220,12 +243,12 @@ function itens (nfe) {
       icms: formataMoeda(row.valorIcms()),
       ipi: formataMoeda(row.valorIPI()),
       porcentagem_icms: formataMoeda(row.porcetagemIcms(), 2),
-      porcentagem_ipi: formataMoeda(row.porcentagemIPI(), 2)
-    }
-    itens.push(item)
+      porcentagem_ipi: formataMoeda(row.porcentagemIPI(), 2),
+    };
+    itens.push(item);
   }
 
-  return itens
+  return itens;
 }
 
 /**
@@ -234,21 +257,21 @@ function itens (nfe) {
  * @param      {object}  nfe     djf-nfe
  * @return     {array}
  */
-function duplicatas (nfe) {
-  var dups = []
+function duplicatas(nfe) {
+  var dups = [];
   if (nfe.cobranca() && nfe.cobranca().nrDuplicatas() > 0) {
-    var quant = nfe.cobranca().nrDuplicatas()
+    var quant = nfe.cobranca().nrDuplicatas();
     for (var i = 1; i <= quant; i++) {
-      var dup = nfe.cobranca().duplicata(i)
+      var dup = nfe.cobranca().duplicata(i);
       dups.push({
         numero: dup.numeroDuplicata(),
         vencimento: formataData(dup.vencimentoDuplicata()),
-        valor: formataMoeda(dup.valorDuplicata(), 2)
-      })
+        valor: formataMoeda(dup.valorDuplicata(), 2),
+      });
     }
   }
 
-  return dups
+  return dups;
 }
 
 /**
@@ -257,14 +280,14 @@ function duplicatas (nfe) {
  * @param      {object}  nfe     djf-nfe
  * @return     {string}
  */
-function observacoes (nfe) {
-  var quant = nfe.nrObservacoes()
-  var result = ''
+function observacoes(nfe) {
+  var quant = nfe.nrObservacoes();
+  var result = "";
   for (var i = 1; i <= quant; i++) {
-    result += '\n' + nfe.observacao(i).texto()
+    result += "\n" + nfe.observacao(i).texto();
   }
 
-  return result
+  return result;
 }
 
 /**
@@ -273,12 +296,12 @@ function observacoes (nfe) {
  * @param      {object}  data
  * @return     {string}
  */
-function renderHtml (data) {
+function renderHtml(data) {
   if (!data) {
-    return ''
+    return "";
   }
-  var template = fs.readFileSync(TEMPLATE_DANFE, 'utf8')
-  return handlebars.compile(template)(data)
+  var template = fs.readFileSync(TEMPLATE_DANFE, "utf8");
+  return handlebars.compile(template)(data);
 }
 
 /**
@@ -287,9 +310,9 @@ function renderHtml (data) {
  * @param      {object}  nfe     djf-nfe
  * @return     {object}
  */
-function getTemplateData (nfe) {
+function getTemplateData(nfe) {
   if (!nfe) {
-    return null
+    return null;
   }
 
   var data = {
@@ -298,10 +321,20 @@ function getTemplateData (nfe) {
     numero: nfe.nrNota(),
     serie: nfe.serie(),
     chave: formataChave(nfe.chave()),
+    barcode: nfe.chave().split(" ").join(""),
     protocolo: nfe.protocolo(),
-    data_protocolo: formataData(nfe.dataHoraRecebimento()) + ' ' + formataHora(nfe.dataHoraRecebimento()),
-    destinatario: Object.assign(dadosEntidade(nfe.destinatario()), endereco(nfe.destinatario())),
-    emitente: Object.assign(dadosEntidade(nfe.emitente()), endereco(nfe.emitente())),
+    data_protocolo:
+      formataData(nfe.dataHoraRecebimento()) +
+      " " +
+      formataHora(nfe.dataHoraRecebimento()),
+    destinatario: Object.assign(
+      dadosEntidade(nfe.destinatario()),
+      endereco(nfe.destinatario())
+    ),
+    emitente: Object.assign(
+      dadosEntidade(nfe.emitente()),
+      endereco(nfe.emitente())
+    ),
     data_emissao: formataData(nfe.dataEmissao()),
     data_entradasaida: formataData(nfe.dataEntradaSaida()),
     hora_entradasaida: formataHora(nfe.dataEntradaSaida()),
@@ -317,39 +350,44 @@ function getTemplateData (nfe) {
     total_despesas: formataMoeda(nfe.total().valorOutrasDespesas(), 2),
     total_ipi: formataMoeda(nfe.total().valorIPI(), 2),
     total_nota: formataMoeda(nfe.total().valorNota(), 2),
-    transportador: Object.assign(dadosEntidade(nfe.transportador()), endereco(nfe.transportador())),
+    transportador: Object.assign(
+      dadosEntidade(nfe.transportador()),
+      endereco(nfe.transportador())
+    ),
     informacoes_fisco: nfe.informacoesFisco(),
     informacoes_complementares: nfe.informacoesComplementares(),
     observacao: observacoes(nfe),
     modalidade_frete: nfe.modalidadeFrete(),
     modalidade_frete_texto: nfe.modalidadeFreteTexto(),
     itens: itens(nfe),
-    duplicatas: duplicatas(nfe)
-  }
+    duplicatas: duplicatas(nfe),
+  };
 
   if (nfe.transporte().volume()) {
-    let volume = nfe.transporte().volume()
-    data.volume_quantidade = formataMoeda(volume.quantidadeVolumes())
-    data.volume_especie = volume.especie()
-    data.volume_marca = volume.marca()
-    data.volume_numeracao = volume.numeracao()
-    data.volume_pesoBruto = formataMoeda(volume.pesoBruto())
-    data.volume_pesoLiquido = formataMoeda(volume.pesoLiquido())
+    let volume = nfe.transporte().volume();
+    data.volume_quantidade = formataMoeda(volume.quantidadeVolumes());
+    data.volume_especie = volume.especie();
+    data.volume_marca = volume.marca();
+    data.volume_numeracao = volume.numeracao();
+    data.volume_pesoBruto = formataMoeda(volume.pesoBruto());
+    data.volume_pesoLiquido = formataMoeda(volume.pesoLiquido());
   }
 
   if (nfe.transporte().veiculo()) {
-    data.veiculo_placa = nfe.transporte().veiculo().placa()
-    data.veiculo_placa_uf = nfe.transporte().veiculo().uf()
-    data.veiculo_antt = nfe.transporte().veiculo().antt()
+    data.veiculo_placa = nfe.transporte().veiculo().placa();
+    data.veiculo_placa_uf = nfe.transporte().veiculo().uf();
+    data.veiculo_antt = nfe.transporte().veiculo().antt();
   }
 
   if (nfe.servico()) {
-    data.total_servico = formataMoeda(nfe.servico().valorTotalServicoNaoIncidente())
-    data.total_issqn = formataMoeda(nfe.servico().valorTotalISS())
-    data.base_calculo_issqn = formataMoeda(nfe.servico().baseCalculo())
+    data.total_servico = formataMoeda(
+      nfe.servico().valorTotalServicoNaoIncidente()
+    );
+    data.total_issqn = formataMoeda(nfe.servico().valorTotalISS());
+    data.base_calculo_issqn = formataMoeda(nfe.servico().baseCalculo());
   }
 
-  return data
+  return data;
 }
 
 /**
@@ -358,10 +396,10 @@ function getTemplateData (nfe) {
  * @param      {<type>}  nfe     djf-nfe
  * @return     {Object}  { description_of_the_return_value }
  */
-function model (nfe) {
+function model(nfe) {
   return {
-    toHtml: () => renderHtml(getTemplateData(nfe))
-  }
+    toHtml: () => renderHtml(getTemplateData(nfe)),
+  };
 }
 
 /**
@@ -371,11 +409,11 @@ function model (nfe) {
  * @return     {<object>}
  */
 module.exports.fromNFe = function (nfe) {
-  if (!nfe || typeof nfe.nrNota !== 'function') {
-    return model(null)
+  if (!nfe || typeof nfe.nrNota !== "function") {
+    return model(null);
   }
-  return model(nfe)
-}
+  return model(nfe);
+};
 
 /**
  * Retorna modelo Danfe de acordo com <xml> especificado.
@@ -384,11 +422,11 @@ module.exports.fromNFe = function (nfe) {
  * @return     {<object>}
  */
 module.exports.fromXML = function (xml) {
-  if (!xml || typeof xml !== 'string') {
-    return model(null)
+  if (!xml || typeof xml !== "string") {
+    return model(null);
   }
-  return model(NFe(xml))
-}
+  return model(NFe(xml));
+};
 
 /**
  * Retorna modelo Danfe de acordo com <filePath> especificado.
@@ -397,17 +435,17 @@ module.exports.fromXML = function (xml) {
  * @return     {<object>}
  */
 module.exports.fromFile = function (filePath) {
-  var content = ''
+  var content = "";
 
-  if (!filePath || typeof filePath !== 'string') {
-    return model(null)
+  if (!filePath || typeof filePath !== "string") {
+    return model(null);
   }
 
   try {
-    content = fs.readFileSync(filePath, 'utf8')
+    content = fs.readFileSync(filePath, "utf8");
   } catch (err) {
-    throw new Error('File not found: ' + filePath + ' => ' + err.message)
+    throw new Error("File not found: " + filePath + " => " + err.message);
   }
 
-  return module.exports.fromXML(content)
-}
+  return module.exports.fromXML(content);
+};
