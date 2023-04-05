@@ -30,12 +30,14 @@
     table { border-collapse: collapse; border-spacing: 0; } td, th { padding: 0;
     text-align: left; } .content.is-small { font-size: 0.75rem; }
     .content.is-medium { font-size: 1.25rem; } .content.is-large { font-size:
-    1.5rem; }
-  </style>
-  <style>
-    html, body { font-family:'Roboto', sans-serif; line-height: 1; color: black
-    !important; font-size: 11px; font-weight: 500 !important; } .area { width:
-    778px !important; } .quadro_codigo_barra { padding: 0px !important; }
+    1.5rem; } .products { min-height: 405px; border: 0.5px solid black; }
+    .products table { height: max-content; } .products table tbody tr
+    td:first-child, .products table thead tr th:first-child { border-left: none
+    !important; } .products table tbody tr td:last-child, .products table thead
+    tr th:last-child { border-right: none !important; } body {
+    font-family:'Roboto', sans-serif; line-height: 1; color: black !important;
+    font-size: 11px; font-weight: 500 !important; } .area { width: 778px
+    !important; } .quadro_codigo_barra { padding: 0px !important; }
     .codigo_barra { height: 56px; } .chave { height: 33px; font-size: 82%;
     font-weight: bold; text-align: center; } .protocolo, .consulta, .chave {
     padding: 2px; } .protocolo { flex: 0 0 296px; } .codigo_barra, .chave {
@@ -71,8 +73,7 @@
     .duplicatas .duplicata div { margin-top: 2px; } .duplicatas .tcampo {
     font-size: 0.8rem; margin-top: 1px; } table td, table th { border: 0.5px
     solid black !important; border-top: 0px solid black !important; padding: 2px
-    !important; color: black !important; } table { margin-bottom: 1px
-    !important; width: 100%; }
+    !important; color: black !important; } table { width: 100%; }
   </style>
 
   <body>
@@ -477,7 +478,7 @@
                 DADOS DOS PRODUTOS/SERVIÇOS
               </div>
             </div>
-            <div class="columns">
+            <div class="columns products">
               <table class="table is-bordered itens">
                 <thead>
                   <tr>
